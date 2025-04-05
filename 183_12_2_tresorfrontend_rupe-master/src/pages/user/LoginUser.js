@@ -9,8 +9,25 @@ function LoginUser({loginValues, setLoginValues}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(loginValues);
-        navigate('/')
+        try {
+            const response = await fetch("http://localhost:8080/api/users/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(loginValues)
+            });
+
+            if (response.ok) {
+                console.log("Login erfolgreich!");
+                navigate('/');
+            } else {
+                const errorText = await response.text();
+                alert("Login fehlgeschlagen: " + errorText);
+            }
+        } catch (error) {
+            console.error("Fehler beim Login:", error);
+        }
     };
 
     return (
