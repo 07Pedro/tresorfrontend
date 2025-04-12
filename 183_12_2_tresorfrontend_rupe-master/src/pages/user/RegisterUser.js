@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {postUser} from "../../comunication/FetchUser";
+import { postUser } from "../../comunication/FetchUser";
+import ReCAPTCHA from 'react-google-recaptcha';
 
 /**
  * RegisterUser
@@ -19,6 +20,7 @@ function RegisterUser({loginValues, setLoginValues}) {
     };
     const [credentials, setCredentials] = useState(initialState);
     const [errorMessage, setErrorMessage] = useState('');
+    const [captchaToken, setCaptchaToken] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,9 +33,14 @@ function RegisterUser({loginValues, setLoginValues}) {
             return;
         }
 
+        if (!captchaToken) {
+            setErrorMessage('Please complete the CAPTCHA.');
+            return;
+        }
+
         try {
-            await postUser(credentials);
-            setLoginValues({userName: credentials.email, password: credentials.password});
+            await postUser({ ...credentials, recaptchaToken: captchaToken });
+            setLoginValues({ userName: credentials.email, password: credentials.password });
             setCredentials(initialState);
             navigate('/');
         } catch (error) {
@@ -107,6 +114,13 @@ function RegisterUser({loginValues, setLoginValues}) {
                         </div>
                     </aside>
                 </section>
+
+                <ReCAPTCHA
+                    sitekey="6Ldm8hUrAAAAAGnVPx33xjO6LkfdDu2nBzQBFZ9s"
+                    onChange={(token) => setCaptchaToken(token)}
+                    onExpired={() => setCaptchaToken('')}
+                />
+
                 <button type="submit">Register</button>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             </form>
