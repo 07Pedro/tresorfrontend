@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { postUser } from "../../comunication/FetchUser";
+import {postUser, postUserRegister} from "../../comunication/FetchUser";
 import ReCAPTCHA from 'react-google-recaptcha';
 
 /**
@@ -33,14 +33,16 @@ function RegisterUser({loginValues, setLoginValues}) {
             return;
         }
 
+        console.log(typeof captchaToken)
+
         if (!captchaToken) {
             setErrorMessage('Please complete the CAPTCHA.');
             return;
         }
 
         try {
-            await postUser({ ...credentials, recaptchaToken: captchaToken });
-            setLoginValues({ userName: credentials.email, password: credentials.password });
+            await postUserRegister({ ...credentials, recaptchaToken: captchaToken.toString() });
+            setLoginValues({ userName: credentials.email, password: credentials.password, recaptchaToken: captchaToken });
             setCredentials(initialState);
             navigate('/');
         } catch (error) {

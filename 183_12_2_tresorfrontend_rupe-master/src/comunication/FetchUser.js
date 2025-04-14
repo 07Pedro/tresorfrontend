@@ -70,3 +70,42 @@ export const postUser = async (content, recaptchaToken) => {
         throw new Error('Failed to save user. ' || error.message);
     }
 };
+
+
+export const postUserRegister = async (content, recaptchaToken) => {
+    const protocol = process.env.REACT_APP_API_PROTOCOL; // "http"
+    const host = process.env.REACT_APP_API_HOST; // "localhost"
+    const port = process.env.REACT_APP_API_PORT; // "8080"
+    const path = process.env.REACT_APP_API_PATH; // "/api"
+    const portPart = port ? `:${port}` : ''; // port is optional
+    const API_URL = `${protocol}://${host}${portPart}${path}`;
+    console.log(recaptchaToken)
+
+    try {
+        const response = await fetch(`${API_URL}/users/user/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                firstName: `${content.firstName}`,
+                lastName: `${content.lastName}`,
+                email: `${content.email}`,
+                password: `${content.password}`,
+                passwordConfirmation: `${content.passwordConfirmation}`,
+                recaptchaToken: `${content.recaptchaToken}`
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Server response failed.');
+        }
+        const data = await response.json();
+        console.log('User successfully posted:', data);
+        return data;
+    } catch (error) {
+        console.error('Failed to post user:', error.message);
+        throw new Error('Failed to save user. ' || error.message);
+    }
+};
