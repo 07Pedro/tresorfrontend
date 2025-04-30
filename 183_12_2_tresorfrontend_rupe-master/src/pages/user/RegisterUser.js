@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {postUser, postUserRegister} from "../../comunication/FetchUser";
+import { postUserRegister } from "../../comunication/FetchUser";
 import ReCAPTCHA from 'react-google-recaptcha';
 
 /**
@@ -21,6 +21,9 @@ function RegisterUser({loginValues, setLoginValues}) {
     const [credentials, setCredentials] = useState(initialState);
     const [errorMessage, setErrorMessage] = useState('');
     const [captchaToken, setCaptchaToken] = useState('');
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -94,25 +97,41 @@ function RegisterUser({loginValues, setLoginValues}) {
                     <aside>
                         <div>
                             <label>Password:</label>
-                            <input
-                                type="text"
-                                value={credentials.password}
-                                onChange={(e) =>
-                                    setCredentials(prevValues => ({...prevValues, password: e.target.value}))}
-                                required
-                                placeholder="Please enter your pwd *"
-                            />
+                            <div style={{ display: 'flex', alignItems: 'column' }}>
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={credentials.password}
+                                    onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
+                                    required
+                                    placeholder="Please enter your pwd *"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(prev => !prev)}
+                                    style={{ border: 'black', padding: '0 4px', cursor: 'pointer', marginBottom: '1rem', marginTop: '0rem', marginLeft: '1rem' }}
+                                >
+                                    show
+                                </button>
+                            </div>
                         </div>
                         <div>
-                            <label>Password confirmation:</label>
-                            <input
-                                type="text"
-                                value={credentials.passwordConfirmation}
-                                onChange={(e) =>
-                                    setCredentials(prevValues => ({...prevValues, passwordConfirmation: e.target.value}))}
-                                required
-                                placeholder="Please confirm your pwd *"
-                            />
+                            <label>Confirm Password:</label>
+                            <div style={{ display: 'flex', alignItems: 'column' }}>
+                                <input
+                                    type={showPasswordConfirmation ? 'text' : 'password'}
+                                    value={credentials.passwordConfirmation}
+                                    onChange={(e) => setCredentials(prev => ({ ...prev, passwordConfirmation: e.target.value }))}
+                                    required
+                                    placeholder="Please confirm your pwd *"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPasswordConfirmation(prev => !prev)}
+                                    style={{ border: 'black', padding: '0 4px', cursor: 'pointer', marginBottom: '1rem', marginTop: '0rem', marginLeft: '1rem' }}
+                                >
+                                    show
+                                </button>
+                            </div>
                         </div>
                     </aside>
                 </section>

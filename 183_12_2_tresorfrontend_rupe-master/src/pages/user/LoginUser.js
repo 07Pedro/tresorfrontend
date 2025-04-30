@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import React, {useState} from "react";
 
 /**
  * LoginUser
@@ -6,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
  */
 function LoginUser({loginValues, setLoginValues}) {
     const navigate = useNavigate();
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,14 +52,23 @@ function LoginUser({loginValues, setLoginValues}) {
                         </div>
                         <div>
                             <label>Password:</label>
-                            <input
-                                type="password"
-                                value={loginValues.password}
-                                onChange={(e) =>
-                                    setLoginValues(prevValues => ({...prevValues, password: e.target.value}))}
-                                required
-                                placeholder="Please enter your password *"
-                            />
+                            <div style={{ display: 'flex', alignItems: 'column' }}>
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={loginValues.password}
+                                    onChange={(e) =>
+                                        setLoginValues(prevValues => ({...prevValues, password: e.target.value}))}
+                                    required
+                                    placeholder="Please enter your password *"
+                                />
+                                <button
+                                type="button"
+                                onClick={() => setShowPassword(prev => !prev)}
+                                style={{ border: 'black', padding: '0 4px', cursor: 'pointer', marginBottom: '1rem', marginTop: '0rem', marginLeft: '1rem' }}
+                                >
+                                show
+                                </button>
+                            </div>
                         </div>
                     </aside>
                 </section>
