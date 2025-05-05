@@ -1,6 +1,5 @@
 import '../../App.css';
-import React, {useEffect, useState} from 'react';
-import {getSecretsforUser} from "../../comunication/FetchSecrets";
+import React, { useEffect, useState } from 'react';
 
 /**
  * Secrets
@@ -16,6 +15,7 @@ const Secrets = ({loginValues}) => {
             if( ! loginValues.email){
                 console.error('Secrets: No valid email, please do login first:' + loginValues);
                 setErrorMessage("No valid email, please do login first.");
+                return;
             }
             try {
                 const response = await fetch("http://localhost:8080/api/secrets/byemail", { // POST request auf richtigen endpoint machen
@@ -33,7 +33,7 @@ const Secrets = ({loginValues}) => {
                     throw new Error("Failed to fetch secrets: " + response.statusText);
                 }
 
-                const data = await response.json(); // warten auf antwort vom backend(secrets)
+                const data = await response.json();
 
                 if (data.length === 0) {
                     console.log("No secrets found.");
@@ -41,7 +41,7 @@ const Secrets = ({loginValues}) => {
                     return;
                 }
 
-                setSecrets(data); // secrets vom backend dem Frontend const. zuweisen
+                setSecrets(data);
             } catch (error) {
                 console.error("Error fetching secrets:", error);
                 setSecrets([]);
@@ -50,18 +50,38 @@ const Secrets = ({loginValues}) => {
         fetchSecrets();
     }, [loginValues]);
 
+    const renderSecretContent = (content) => {
+        try {
+            const parsed = typeof content === "string" ? JSON.parse(content) : content;
+            return (
+                <table>
+                    <tbody>
+                    {Object.entries(parsed).map(([key, value]) => (
+                        <tr key={key}>
+                            <td><strong>{key}</strong></td>
+                            <td>{value}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            );
+        } catch (e) {
+            return <pre>{content}</pre>; // fallback if not JSON
+        }
+    };
+
     return (
         <>
-            <h1>my secrets</h1>
-            {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
-             <form>
-                <h2>secrets</h2>
-                <table border="1">
+            <h1>My Secrets</h1>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            <form>
+                <h2>Secrets</h2>
+                <table border="1" cellPadding={5}>
                     <thead>
                     <tr>
-                        <th>secret id</th>
-                        <th>user id</th>
-                        <th>content</th>
+                        <th>Secret ID</th>
+                        <th>User ID</th>
+                        <th>Content</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -70,9 +90,7 @@ const Secrets = ({loginValues}) => {
                             <tr key={secret.id}>
                                 <td>{secret.id}</td>
                                 <td>{secret.userId}</td>
-                                <td>
-                                    <pre>{JSON.stringify(secret.content, null, 2)}</pre>
-                                </td>
+                                <td>{renderSecretContent(secret.content)}</td>
                             </tr>
                         ))
                     ) : (
