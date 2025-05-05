@@ -16,15 +16,35 @@ const Secrets = ({loginValues}) => {
             if( ! loginValues.email){
                 console.error('Secrets: No valid email, please do login first:' + loginValues);
                 setErrorMessage("No valid email, please do login first.");
-            } else {
-                try {
-                    const data = await getSecretsforUser(loginValues);
-                    console.log(data);
-                    setSecrets(data);
-                } catch (error) {
-                    console.error('Failed to fetch to server:', error.message);
-                    setErrorMessage(error.message);
+            }
+            try {
+                const response = await fetch("http://localhost:8080/api/secrets/byemail", { // POST request auf richtigen endpoint machen
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ // values wo migegeben werden
+                        email: loginValues.email, // email
+                        encryptPassword: loginValues.password // passwort
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch secrets: " + response.statusText);
                 }
+
+                const data = await response.json(); // warten auf antwort vom backend(secrets)
+
+                if (data.length === 0) {
+                    console.log("No secrets found.");
+                    setSecrets([]);
+                    return;
+                }
+
+                setSecrets(data); // secrets vom backend dem Frontend const. zuweisen
+            } catch (error) {
+                console.error("Error fetching secrets:", error);
+                setSecrets([]);
             }
         };
         fetchSecrets();
