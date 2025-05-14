@@ -14,7 +14,6 @@ const Users = ({loginValues}) => {
         const fetchUsers = async () => {
             try {
                 const users = await getUsers();
-                console.log(users);
                 setUsers(users);
             } catch (error) {
                 console.error('Failed to fetch to server:', error.message);

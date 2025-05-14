@@ -22,7 +22,6 @@ function LoginUser({loginValues, setLoginValues}) {
             });
 
             if (response.ok) {
-                console.log("Login erfolgreich!");
                 navigate('/');
             } else {
                 const errorText = await response.text();

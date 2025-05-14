@@ -26,7 +26,6 @@ export const getUsers = async () => {
         }
 
         const data = await response.json();
-        console.log('User successfully got:', data);
         return data;
     } catch (error) {
         console.error('Failed to get user:', error.message);
@@ -63,7 +62,6 @@ export const postUser = async (content, recaptchaToken) => {
             throw new Error(errorData.message || 'Server response failed.');
         }
         const data = await response.json();
-        console.log('User successfully posted:', data);
         return data;
     } catch (error) {
         console.error('Failed to post user:', error.message);
@@ -79,7 +77,6 @@ export const postUserRegister = async (content, recaptchaToken) => {
     const path = process.env.REACT_APP_API_PATH; // "/api"
     const portPart = port ? `:${port}` : ''; // port is optional
     const API_URL = `${protocol}://${host}${portPart}${path}`;
-    console.log(recaptchaToken)
 
     try {
         const response = await fetch(`${API_URL}/users/user/register`, {
@@ -102,7 +99,6 @@ export const postUserRegister = async (content, recaptchaToken) => {
             throw new Error(errorData.message || 'Server response failed.');
         }
         const data = await response.json();
-        console.log('User successfully posted:', data);
         return data;
     } catch (error) {
         console.error('Failed to post user:', error.message);

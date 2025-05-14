@@ -31,12 +31,9 @@ function RegisterUser({loginValues, setLoginValues}) {
 
         //validate
         if(credentials.password !== credentials.passwordConfirmation) {
-            console.log("password != passwordConfirmation");
             setErrorMessage('Password and password-confirmation are not equal.');
             return;
         }
-
-        console.log(typeof captchaToken)
 
         if (!captchaToken) {
             setErrorMessage('Please complete the CAPTCHA.');

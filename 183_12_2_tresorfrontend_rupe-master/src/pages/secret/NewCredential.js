@@ -22,7 +22,6 @@ function NewCredential({loginValues}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage('');
-        console.log(loginValues)
         try {
             const content = credentialValues;
             await postSecret({loginValues, content});
