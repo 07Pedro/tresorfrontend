@@ -29,7 +29,7 @@ export const getUsers = async () => {
         return data;
     } catch (error) {
         console.error('Failed to get user:', error.message);
-        throw new Error('Failed to get user. ' || error.message);
+        throw new Error('Failed to get user. ' + error.message);
     }
 }
 
@@ -65,12 +65,11 @@ export const postUser = async (content, recaptchaToken) => {
         return data;
     } catch (error) {
         console.error('Failed to post user:', error.message);
-        throw new Error('Failed to save user. ' || error.message);
+        throw new Error('Failed to save user. ' + error.message);
     }
 };
 
-
-export const postUserRegister = async (content, recaptchaToken) => {
+export const postUserRegister = async (content) => {
     const protocol = process.env.REACT_APP_API_PROTOCOL; // "http"
     const host = process.env.REACT_APP_API_HOST; // "localhost"
     const port = process.env.REACT_APP_API_PORT; // "8080"
@@ -96,12 +95,12 @@ export const postUserRegister = async (content, recaptchaToken) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Server response failed.');
+            throw new Error(errorData.error || errorData.message || 'Server response failed.');
         }
         const data = await response.json();
         return data;
     } catch (error) {
         console.error('Failed to post user:', error.message);
-        throw new Error('Failed to save user. ' || error.message);
+        throw new Error(error.message || 'Failed to save user.');
     }
 };

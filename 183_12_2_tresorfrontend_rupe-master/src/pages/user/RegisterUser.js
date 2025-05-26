@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postUserRegister } from "../../comunication/FetchUser";
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -9,6 +9,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
  */
 function RegisterUser({loginValues, setLoginValues}) {
     const navigate = useNavigate();
+    const captchaRef = useRef(null); // captcha refference to reset
 
     const initialState = {
         firstName: "",
@@ -19,24 +20,56 @@ function RegisterUser({loginValues, setLoginValues}) {
         errorMessage: ""
     };
     const [credentials, setCredentials] = useState(initialState);
-    const [errorMessage, setErrorMessage] = useState('');
     const [captchaToken, setCaptchaToken] = useState('');
-
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
+    // Error messages depending on pwd strenght
+    function validatePassword(password) {
+        if (password.length < 8) {
+            return "Password must be at least 8 characters long.";
+        }
+        if (!/[A-Z]/.test(password)) {
+            return "Password must contain at least one uppercase letter.";
+        }
+        if (!/[a-z]/.test(password)) {
+            return "Password must contain at least one lowercase letter.";
+        }
+        if (!/\d/.test(password)) {
+            return "Password must contain at least one number.";
+        }
+        if (!/[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]/.test(password)) {
+            return "Password must contain at least one special character.";
+        }
+        return "";
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage('');
 
-        //validate
-        if(credentials.password !== credentials.passwordConfirmation) {
-            setErrorMessage('Password and password-confirmation are not equal.');
+        setCredentials(prev => ({ ...prev, errorMessage: '' }));
+
+        // Captcha prüfen
+        if (!captchaToken) {
+            setCredentials(prev => ({ ...prev, errorMessage: 'Please complete the CAPTCHA.' }));
             return;
         }
 
-        if (!captchaToken) {
-            setErrorMessage('Please complete the CAPTCHA.');
+        // Passwort validieren
+        const passwordError = validatePassword(credentials.password);
+        if (passwordError) {
+            setCredentials(prev => ({ ...prev, errorMessage: passwordError }));
+            setCaptchaToken(''); // Captcha Token zurücksetzen
+            if (captchaRef.current) {
+                captchaRef.current.reset(); // Captcha state zurücksetzen
+            }
+            return;
+        }
+
+        // Passwörter vergleichen
+        if (credentials.password !== credentials.passwordConfirmation) {
+            setCredentials(prev => ({ ...prev, errorMessage: 'Password and password-confirmation are not equal.' }));
+            setCaptchaToken(''); // Captcha Tokem zurücksetzen
             return;
         }
 
@@ -44,10 +77,12 @@ function RegisterUser({loginValues, setLoginValues}) {
             await postUserRegister({ ...credentials, recaptchaToken: captchaToken.toString() });
             setLoginValues({ userName: credentials.email, password: credentials.password, recaptchaToken: captchaToken });
             setCredentials(initialState);
+            setCaptchaToken(''); // Captcha Token zurücksetzen
             navigate('/');
         } catch (error) {
             console.error('Failed to fetch to server:', error.message);
-            setErrorMessage(error.message);
+            setCredentials(prev => ({ ...prev, errorMessage: error.message }));
+            setCaptchaToken(''); // Captcha Token zurücksetzen
         }
     };
 
@@ -137,10 +172,11 @@ function RegisterUser({loginValues, setLoginValues}) {
                     sitekey="6Ldm8hUrAAAAAGnVPx33xjO6LkfdDu2nBzQBFZ9s"
                     onChange={(token) => setCaptchaToken(token)}
                     onExpired={() => setCaptchaToken('')}
+                    ref={captchaRef} // Captcha refference to reset
                 />
 
                 <button type="submit">Register</button>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                {credentials.errorMessage && <p style={{ color: 'red' }}>{credentials.errorMessage}</p>}
             </form>
         </div>
     );
