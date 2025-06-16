@@ -1,7 +1,10 @@
+
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postUserRegister } from "../../comunication/FetchUser";
 import ReCAPTCHA from 'react-google-recaptcha';
+import viewIcon from "../../img/view.png";
+import hideIcon from "../../img/hide.png";
 
 /**
  * RegisterUser
@@ -70,6 +73,9 @@ function RegisterUser({loginValues, setLoginValues}) {
         if (credentials.password !== credentials.passwordConfirmation) {
             setCredentials(prev => ({ ...prev, errorMessage: 'Password and password-confirmation are not equal.' }));
             setCaptchaToken(''); // Captcha Tokem zurücksetzen
+            if (captchaRef.current) {
+                captchaRef.current.reset(); // Captcha state zurücksetzen
+            }
             return;
         }
 
@@ -78,93 +84,100 @@ function RegisterUser({loginValues, setLoginValues}) {
             setLoginValues({ userName: credentials.email, password: credentials.password, recaptchaToken: captchaToken });
             setCredentials(initialState);
             setCaptchaToken(''); // Captcha Token zurücksetzen
+            if (captchaRef.current) {
+                captchaRef.current.reset(); // Captcha state zurücksetzen
+            }
             navigate('/');
         } catch (error) {
             console.error('Failed to fetch to server:', error.message);
             setCredentials(prev => ({ ...prev, errorMessage: error.message }));
             setCaptchaToken(''); // Captcha Token zurücksetzen
+            if (captchaRef.current) {
+                captchaRef.current.reset(); // Captcha state zurücksetzen
+            }
         }
     };
 
     return (
-        <div>
-            <h2>Register user</h2>
+        <div className="register-container">
+            <h2>Benutzer registrieren</h2>
             <form onSubmit={handleSubmit}>
-                <section>
-                <aside>
-                    <div>
-                        <label>Firstname:</label>
-                        <input
-                            type="text"
-                            value={credentials.firstName}
-                            onChange={(e) =>
-                                setCredentials(prevValues => ({...prevValues, firstName: e.target.value}))}
-                            required
-                            placeholder="Please enter your firstname *"
-                        />
-                    </div>
-                    <div>
-                        <label>Lastname:</label>
-                        <input
-                            type="text"
-                            value={credentials.lastName}
-                            onChange={(e) =>
-                                setCredentials(prevValues => ({...prevValues, lastName: e.target.value}))}
-                            required
-                            placeholder="Please enter your lastname *"
-                        />
-                    </div>
-                    <div>
-                        <label>Email:</label>
-                        <input
-                            type="text"
-                            value={credentials.email}
-                            onChange={(e) =>
-                                setCredentials(prevValues => ({...prevValues, email: e.target.value}))}
-                            required
-                            placeholder="Please enter your email"
-                        />
-                    </div>
-                </aside>
+                <section className="register-section">
                     <aside>
-                        <div>
-                            <label>Password:</label>
-                            <div style={{ display: 'flex', alignItems: 'column' }}>
+                        <label>
+                            Firstname:
+                            <input
+                                type="text"
+                                value={credentials.firstName}
+                                onChange={e => setCredentials(prev => ({ ...prev, firstName: e.target.value }))}
+                                required
+                                placeholder="Please enter your firstname *"
+                            />
+                        </label>
+                        <label>
+                            Lastname:
+                            <input
+                                type="text"
+                                value={credentials.lastName}
+                                onChange={e => setCredentials(prev => ({ ...prev, lastName: e.target.value }))}
+                                required
+                                placeholder="Please enter your lastname *"
+                            />
+                        </label>
+                        <label>
+                            Email:
+                            <input
+                                type="email"
+                                value={credentials.email}
+                                onChange={e => setCredentials(prev => ({ ...prev, email: e.target.value }))}
+                                required
+                                placeholder="Please enter your email"
+                            />
+                        </label>
+                    </aside>
+
+                    <aside>
+                        <label>
+                            Password:
+                            <div className="password-input-wrapper">
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     value={credentials.password}
-                                    onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
+                                    onChange={e => setCredentials(prev => ({ ...prev, password: e.target.value }))}
                                     required
                                     placeholder="Please enter your pwd *"
                                 />
                                 <button
                                     type="button"
+                                    className="show-password-btn"
                                     onClick={() => setShowPassword(prev => !prev)}
-                                    style={{ border: 'black', padding: '0 4px', cursor: 'pointer', marginBottom: '1rem', marginTop: '0rem', marginLeft: '1rem' }}
+                                    aria-label="Passwort anzeigen oder verbergen"
                                 >
-                                    show
+                                    <img src={showPassword ? viewIcon : hideIcon} alt="toggle visibility" className="eye-icon" />
                                 </button>
                             </div>
-                        </div>
-                        <div>
-                            <label>Confirm Password:</label>
-                            <div style={{ display: 'flex', alignItems: 'column' }}>
+                        </label>
+
+                        <label>
+                            Confirm Password:
+                            <div className="password-input-wrapper">
                                 <input
                                     type={showPasswordConfirmation ? 'text' : 'password'}
                                     value={credentials.passwordConfirmation}
-                                    onChange={(e) => setCredentials(prev => ({ ...prev, passwordConfirmation: e.target.value }))}
+                                    onChange={e => setCredentials(prev => ({ ...prev, passwordConfirmation: e.target.value }))}
                                     required
                                     placeholder="Please confirm your pwd *"
                                 />
                                 <button
                                     type="button"
+                                    className="show-password-btn"
                                     onClick={() => setShowPasswordConfirmation(prev => !prev)}
-                                    style={{ border: 'black', padding: '0 4px', cursor: 'pointer', marginBottom: '1rem', marginTop: '0rem', marginLeft: '1rem' }}
+                                    aria-label="Passwort bestätigen anzeigen oder verbergen"
                                 >
-                                    show
+                                    <img src={showPasswordConfirmation ? viewIcon : hideIcon} alt="toggle visibility" className="eye-icon" />
                                 </button>
                             </div>
-                        </div>
+                        </label>
                     </aside>
                 </section>
 
@@ -175,7 +188,8 @@ function RegisterUser({loginValues, setLoginValues}) {
                     ref={captchaRef} // Captcha refference to reset
                 />
 
-                <button type="submit">Register</button>
+                <button type="submit" className="btn-submit">Register</button>
+
                 {credentials.errorMessage && <p style={{ color: 'red' }}>{credentials.errorMessage}</p>}
             </form>
         </div>

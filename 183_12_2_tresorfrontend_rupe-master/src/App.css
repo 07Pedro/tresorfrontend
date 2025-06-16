@@ -125,3 +125,99 @@ h1 {
 .nopage-container p {
   font-size: 1.25rem;
 }
+
+.register-container {
+   max-width: 600px;
+   margin: 2rem auto;
+   padding: 1rem 2rem;
+   background: #f9f9f9;
+   border-radius: 8px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ }
+
+.register-container h2 {
+  text-align: center;
+  color: #333;
+}
+
+.register-section {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.register-section aside {
+  flex: 1;
+  min-width: 250px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 95%;
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+
+.password-input-wrapper input {
+  padding-right: 2.5rem;
+}
+
+.show-password-btn {
+  position: absolute;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -1%;
+}
+
+.eye-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-submit {
+  display: block;
+  width: 80%;
+  margin: 1rem auto 0;
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #3f51b5;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #303f9f;
+}
+
+.error-message {
+  color: #e03e2f;
+  margin-top: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
