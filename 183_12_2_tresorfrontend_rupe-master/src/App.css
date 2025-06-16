@@ -59,3 +59,47 @@ h1 {
   color: #007acc;
   margin-bottom: 1rem;
 }
+
+.users-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.users-container h1 {
+  color: #007acc;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.users-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.users-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.users-list li strong {
+  color: #005a9e;
+}
+
+.users-list li em {
+  color: #777;
+}
+
+.error-message {
+  color: #d9534f;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
