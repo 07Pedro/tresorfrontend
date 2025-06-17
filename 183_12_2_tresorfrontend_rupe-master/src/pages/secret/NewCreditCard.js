@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {postSecret} from "../../comunication/FetchSecrets";
+import "../../App.css";
 
 /**
  * NewCreditCard
@@ -25,7 +26,7 @@ function NewCreditCard({loginValues}) {
         setErrorMessage('');
         try {
             const content = creditCardValues;
-            await postSecret({loginValues, content});
+            await postSecret({ loginValues, content });
             setCreditCardValues(initialState);
             navigate('/secret/secrets');
         } catch (error) {
@@ -35,66 +36,68 @@ function NewCreditCard({loginValues}) {
     };
 
     return (
-        <div>
-            <h2>Add new credit-card secret</h2>
+        <div className="creditcard-container">
+            <h2 className="creditcard-title">Add new credit-card secret</h2>
             <form onSubmit={handleSubmit}>
-                <section>
-                    <aside>
-                        <div>
-                            <label>card type:</label>
-                            <select
-                                value={creditCardValues.cardtype}
-                                onChange={(e) =>
-                                    setCreditCardValues((prevValues) => ({
-                                        ...prevValues,
-                                        cardtype: e.target.value,
-                                    }))}
-                                required
-                            >
-                                <option value="" disabled>
-                                    Please select card type
-                                </option>
-                                <option value="Visa">Visa</option>
-                                <option value="Mastercard">Mastercard</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>cardnumber:</label>
-                            <input
-                                type="text"
-                                value={creditCardValues.cardnumber}
-                                onChange={(e) =>
-                                    setCreditCardValues(prevValues => ({...prevValues, cardnumber: e.target.value}))}
-                                required
-                                placeholder="Please enter cardnumber"
-                            />
-                        </div>
-                        <div>
-                            <label>expiration (mm/yy):</label>
-                            <input
-                                type="text"
-                                value={creditCardValues.expiration}
-                                onChange={(e) =>
-                                    setCreditCardValues(prevValues => ({...prevValues, expiration: e.target.value}))}
-                                required
-                                placeholder="Please enter expiration"
-                            />
-                        </div>
-                        <div>
-                            <label>cvv:</label>
-                            <input
-                                type="text"
-                                value={creditCardValues.cvv}
-                                onChange={(e) =>
-                                    setCreditCardValues(prevValues => ({...prevValues, cvv: e.target.value}))}
-                                required
-                                placeholder="Please enter cvv"
-                            />
-                        </div>
-                        <button type="submit">Save secret</button>
-                        {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
-                    </aside>
-                </section>
+                <div className="form-group">
+                    <label>Card Type:</label>
+                    <select
+                        value={creditCardValues.cardtype}
+                        onChange={(e) =>
+                            setCreditCardValues(prev => ({ ...prev, cardtype: e.target.value }))
+                        }
+                        required
+                    >
+                        <option value="" disabled>Please select card type</option>
+                        <option value="Visa">Visa</option>
+                        <option value="Mastercard">Mastercard</option>
+                    </select>
+                </div>
+
+                <div className="form-group">
+                    <label>Card Number:</label>
+                    <input
+                        type="text"
+                        value={creditCardValues.cardnumber}
+                        onChange={(e) =>
+                            setCreditCardValues(prev => ({ ...prev, cardnumber: e.target.value }))
+                        }
+                        required
+                        placeholder="Enter card number"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Expiration (MM/YY):</label>
+                    <input
+                        type="text"
+                        value={creditCardValues.expiration}
+                        onChange={(e) =>
+                            setCreditCardValues(prev => ({ ...prev, expiration: e.target.value }))
+                        }
+                        required
+                        placeholder="Enter expiration"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>CVV:</label>
+                    <input
+                        type="text"
+                        value={creditCardValues.cvv}
+                        onChange={(e) =>
+                            setCreditCardValues(prev => ({ ...prev, cvv: e.target.value }))
+                        }
+                        required
+                        placeholder="Enter CVV"
+                    />
+                </div>
+
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+                <div className="button-container">
+                    <button type="submit" className="btn-submit">Save secret</button>
+                </div>
             </form>
         </div>
     );
