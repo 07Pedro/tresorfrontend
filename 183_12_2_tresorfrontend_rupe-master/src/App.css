@@ -249,15 +249,6 @@ label {
   color: #444;
 }
 
-input[type="email"],
-input[type="password"],
-input[type="text"] {
-  width: 85%;
-  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
 
 .password-wrapper {
   position: relative;
@@ -306,14 +297,6 @@ label {
   color: #444;
 }
 
-input[type="text"] {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  height: 40px; /* 🔽 Title input kleiner machen */
-}
 
 textarea {
   width: 100%;
@@ -410,4 +393,53 @@ textarea {
   color: red;
   margin-top: 1rem;
   text-align: center;
+}
+
+.credential-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.credential-title {
+  text-align: center;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.input-label {
+  width: 100px;
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.input-field {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.password-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+.submit-button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
 }
