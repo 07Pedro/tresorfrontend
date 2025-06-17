@@ -7,10 +7,10 @@ import "../../App.css";
  * NewNote
  * @author Peter Rutschmann
  */
-function NewNote({loginValues}) {
+function NewNote({ loginValues }) {
     const initialState = {
         kindid: 3,
-        kind:"note",
+        kind: "note",
         title: "",
         content: "",
     };
@@ -23,8 +23,12 @@ function NewNote({loginValues}) {
         e.preventDefault();
         setErrorMessage('');
         try {
-            const content = noteValues;
-            await postSecret({loginValues, content});
+            const content = {
+                email: loginValues.email,
+                encryptPassword: loginValues.password,
+                ...noteValues,
+            };
+            await postSecret({ loginValues, content }); // content komplett übergeben
             setNoteValues(initialState);
             navigate('/secret/secrets');
         } catch (error) {
