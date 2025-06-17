@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {postSecret} from "../../comunication/FetchSecrets";
+import { postSecret } from "../../comunication/FetchSecrets";
+import "../../App.css";
 
 /**
  * NewNote
@@ -33,44 +34,31 @@ function NewNote({loginValues}) {
     };
 
     return (
-        <div>
+        <div className="note-container">
             <h2>Add new note secret</h2>
             <form onSubmit={handleSubmit}>
-                <section>
-                    <aside>
-                        <div>
-                            <label>title:</label>
-                            <input
-                                type="text"
-                                value={noteValues.title}
-                                onChange={(e) =>
-                                    setNoteValues(prevValues => ({...prevValues, title: e.target.value}))}
-                                required
-                                placeholder="Please enter a title *"
-                            />
-                        </div>
-                        <div>
-                            <label>content:</label>
-                            <textarea
-                                rows={4}
-                                style={{
-                                    resize: 'both', // Ermöglicht Größenänderung in beide Richtungen
-                                    width: '24%', // Standardbreite (kann angepasst werden)
-                                    minWidth: '190px', // Minimale Breite
-                                    minHeight: '100px', // Minimale Höhe
-                                }}
-                                value={noteValues.content}
-                                onChange={(e) =>
-                                    setNoteValues(prevValues =>
-                                        ({...prevValues, content: e.target.value}))}
-                                required
-                                placeholder="Please enter a content *"
-                            />
-                        </div>
-                        <button type="submit">Save secret</button>
-                        {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
-                    </aside>
-                </section>
+                <div className="form-group">
+                    <label>Title:</label>
+                    <input
+                        type="text"
+                        value={noteValues.title}
+                        onChange={(e) => setNoteValues(prev => ({ ...prev, title: e.target.value }))}
+                        required
+                        placeholder="Please enter a title *"
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Content:</label>
+                    <textarea
+                        rows={4}
+                        value={noteValues.content}
+                        onChange={(e) => setNoteValues(prev => ({ ...prev, content: e.target.value }))}
+                        required
+                        placeholder="Please enter a content *"
+                    />
+                </div>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                <button type="submit" className="btn-submit">Save secret</button>
             </form>
         </div>
     );
