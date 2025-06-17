@@ -1,5 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../../App.css";
+import eyeOpen from "../../img/view.png";
+import eyeClosed from "../../img/hide.png";
 
 /**
  * LoginUser
@@ -33,45 +36,46 @@ function LoginUser({loginValues, setLoginValues}) {
     };
 
     return (
-        <div>
-            <h2>Login user</h2>
+        <div className="login-container">
+            <h2>Benutzer Login</h2>
             <form onSubmit={handleSubmit}>
-                <section>
-                    <aside>
-                        <div>
-                            <label>Email:</label>
-                            <input
-                                type="text"
-                                value={loginValues.email}
-                                onChange={(e) =>
-                                    setLoginValues(prevValues => ({...prevValues, email: e.target.value}))}
-                                required
-                                placeholder="Please enter your email *"
+                <div className="form-group">
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        value={loginValues.email}
+                        onChange={e => setLoginValues(prev => ({ ...prev, email: e.target.value }))}
+                        required
+                        placeholder="Email eingeben *"
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Passwort:</label>
+                    <div className="password-wrapper">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            value={loginValues.password}
+                            onChange={e => setLoginValues(prev => ({ ...prev, password: e.target.value }))}
+                            required
+                            placeholder="Passwort eingeben *"
+                        />
+                        <button
+                            type="button"
+                            className="toggle-password-btn"
+                            onClick={() => setShowPassword(prev => !prev)}
+                            aria-label="Passwort anzeigen/verstecken"
+                        >
+                            <img
+                                src={showPassword ? eyeOpen : eyeClosed}
+                                alt={showPassword ? "Passwort sichtbar" : "Passwort versteckt"}
+                                className="eye-icon"
                             />
-                        </div>
-                        <div>
-                            <label>Password:</label>
-                            <div style={{ display: 'flex', alignItems: 'column' }}>
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    value={loginValues.password}
-                                    onChange={(e) =>
-                                        setLoginValues(prevValues => ({...prevValues, password: e.target.value}))}
-                                    required
-                                    placeholder="Please enter your password *"
-                                />
-                                <button
-                                type="button"
-                                onClick={() => setShowPassword(prev => !prev)}
-                                style={{ border: 'black', padding: '0 4px', cursor: 'pointer', marginBottom: '1rem', marginTop: '0rem', marginLeft: '1rem' }}
-                                >
-                                show
-                                </button>
-                            </div>
-                        </div>
-                    </aside>
-                </section>
-                <button type="submit">Login</button>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" className="btn-submit">Login</button>
             </form>
         </div>
     );
