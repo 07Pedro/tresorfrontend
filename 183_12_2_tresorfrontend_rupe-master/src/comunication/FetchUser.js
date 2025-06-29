@@ -11,12 +11,14 @@ export const getUsers = async () => {
     const path = process.env.REACT_APP_API_PATH; // "/api"
     const portPart = port ? `:${port}` : ''; // port is optional
     const API_URL = `${protocol}://${host}${portPart}${path}`;
+    const token = localStorage.getItem("token");
 
     try {
         const response = await fetch(`${API_URL}/users`, {
             method: 'Get',
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                "Authorization": `Bearer ${token}`
             }
         });
 

@@ -25,6 +25,9 @@ function LoginUser({loginValues, setLoginValues}) {
             });
 
             if (response.ok) {
+                const data = await response.json();
+                const token = data.token;
+                localStorage.setItem("token", token);
                 navigate('/');
             } else {
                 const errorText = await response.text();
