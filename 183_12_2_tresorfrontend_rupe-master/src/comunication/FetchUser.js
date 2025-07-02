@@ -15,16 +15,20 @@ export const getUsers = async () => {
 
     try {
         const response = await fetch(`${API_URL}/users`, {
-            method: 'Get',
+            method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 "Authorization": `Bearer ${token}`
             }
         });
 
+        if (response.status === 403) {
+            throw new Error('Access denied. You do not have permission to view this resource.');
+        }
+
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Server response failed.');
+            const errorText = await response.text();
+            throw new Error(errorText || 'Server response failed.');
         }
 
         const data = await response.json();
@@ -33,7 +37,7 @@ export const getUsers = async () => {
         console.error('Failed to get user:', error.message);
         throw new Error('Failed to get user. ' + error.message);
     }
-}
+};
 
 export const postUser = async (content, recaptchaToken) => {
     const protocol = process.env.REACT_APP_API_PROTOCOL; // "http"
